@@ -1,8 +1,8 @@
-import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
-import pluginReactHooks from 'eslint-plugin-react-hooks';
-import pluginReactRefresh from 'eslint-plugin-react-refresh';
-import pluginPrettier from 'eslint-plugin-prettier';
+import js from '@eslint/js'
+import prettier from 'eslint-config-prettier'
+import pluginReactHooks from 'eslint-plugin-react-hooks'
+import pluginReactRefresh from 'eslint-plugin-react-refresh'
+import pluginPrettier from 'eslint-plugin-prettier'
 
 export default [
   js.configs.recommended,
@@ -19,4 +19,4 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
     },
   },
-];
+]
