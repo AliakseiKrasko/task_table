@@ -1,14 +1,28 @@
-import { useSearch } from './useSearch'
-import { useFilteredTasks } from './useFilteredTasks'
+import { useState, useMemo } from 'react'
 import type { Task } from '../../../types/table'
+import dayjs from 'dayjs'
+import { DATE_FORMAT } from '../../../shared/constants/date'
 
-export function useSearchableTasks(tasks: Task[], debounceMs = 300) {
-  const { searchText, inputValue, handleChange } = useSearch(debounceMs)
-  const filteredTasks = useFilteredTasks(tasks, searchText)
+export function useSearchableTasks(tasks: Task[]) {
+  const [inputValue, setInputValue] = useState('')
 
-  return {
-    filteredTasks,
-    inputValue,
-    handleChange,
+  const handleChange = (value: string) => {
+    setInputValue(value)
   }
+
+  const filteredTasks = useMemo(() => {
+    if (!inputValue) return tasks
+
+    const search = inputValue.toLowerCase()
+
+    return tasks.filter((task) => {
+      return (
+        task.name.toLowerCase().includes(search) ||
+        dayjs(task.date).format(DATE_FORMAT).toLowerCase().includes(search) ||
+        String(task.value).includes(search)
+      )
+    })
+  }, [tasks, inputValue])
+
+  return { filteredTasks, inputValue, handleChange }
 }
