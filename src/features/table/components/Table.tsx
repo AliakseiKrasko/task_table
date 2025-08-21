@@ -13,6 +13,7 @@ type Props = {
 }
 
 export default function TasksTable({ data, onDelete, onEdit }: Props) {
+  // Конфигурация колонок таблицы
   const columns: ColumnsType<Task> = [
     {
       title: 'Имя',
@@ -36,6 +37,7 @@ export default function TasksTable({ data, onDelete, onEdit }: Props) {
     {
       title: 'Действия',
       key: 'actions',
+      // кастомный рендер для кнопок действий
       render: (_: unknown, record: Task) => (
         <div className="flex gap-2">
           <Button icon={<EditOutlined />} onClick={() => onEdit(record)} />

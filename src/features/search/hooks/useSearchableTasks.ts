@@ -1,28 +1,39 @@
-import { useState, useMemo } from 'react'
-import type { Task } from '../../../types/table'
+import {useState, useMemo} from 'react'
+import type {Task} from '../../../types/table'
 import dayjs from 'dayjs'
-import { DATE_FORMAT } from '../../../shared/constants/date'
+import {DATE_FORMAT} from '../../../shared/constants/date'
 
+// Хук для поиска по задачам
 export function useSearchableTasks(tasks: Task[]) {
-  const [inputValue, setInputValue] = useState('')
+    // локальное состояние для текста поиска
+    const [inputValue, setInputValue] = useState('')
 
-  const handleChange = (value: string) => {
-    setInputValue(value)
-  }
+    // обработчик изменения значения поиска
+    const handleChange = (value: string) => {
+        setInputValue(value)
+    }
 
-  const filteredTasks = useMemo(() => {
-    if (!inputValue) return tasks
+    // Мемоизированный список задач, отфильтрованных по поисковому запросу
+    const filteredTasks = useMemo(() => {
+        // если строка поиска пустая → возвращаем все задачи
+        if (!inputValue) return tasks
 
-    const search = inputValue.toLowerCase()
+        // приводим строку поиска к нижнему регистру для нечувствительности к регистру
+        const search = inputValue.toLowerCase()
 
-    return tasks.filter((task) => {
-      return (
-        task.name.toLowerCase().includes(search) ||
-        dayjs(task.date).format(DATE_FORMAT).toLowerCase().includes(search) ||
-        String(task.value).includes(search)
-      )
-    })
-  }, [tasks, inputValue])
+        // фильтруем задачи
+        return tasks.filter((task) => {
+            return (
+                // проверка по имени
+                task.name.toLowerCase().includes(search) ||
+                // проверка по дате (форматируем дату и ищем в строке)
+                dayjs(task.date).format(DATE_FORMAT).toLowerCase().includes(search) ||
+                // проверка по числовому значению (приводим к строке)
+                String(task.value).includes(search)
+            )
+        })
+    }, [tasks, inputValue]) // пересчёт фильтрации только при изменении tasks или inputValue
 
-  return { filteredTasks, inputValue, handleChange }
+    // возвращаем готовые данные и обработчик для использования в компоненте
+    return {filteredTasks, inputValue, handleChange}
 }

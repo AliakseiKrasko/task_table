@@ -5,15 +5,19 @@ import dayjs from 'dayjs'
 import { DATE_FORMAT } from '../../../shared/constants/date.ts'
 
 type Props = {
-  open: boolean
-  onCancel: () => void
-  onSubmit: (task: Task) => void
-  initialValues?: Task | null
+    open: boolean                 // состояние открытия/закрытия модального окна
+    onCancel: () => void          // обработчик закрытия модалки
+    onSubmit: (task: Task) => void // обработчик сохранения задачи
+    initialValues?: Task | null   // начальные значения для редактирования (если есть)
 }
 
 export default function ModalForm({ open, onCancel, onSubmit, initialValues }: Props) {
-  const [form] = Form.useForm<Task>()
+  const [form] = Form.useForm<Task>()  // экземпляр формы Ant Design
 
+
+    // При открытии модалки:
+    // - если есть initialValues → заполнить поля (режим редактирования)
+    // - если нет → сбросить форму (режим добавления новой задачи)
   useEffect(() => {
     if (initialValues) {
       form.setFieldsValue({
@@ -32,11 +36,12 @@ export default function ModalForm({ open, onCancel, onSubmit, initialValues }: P
       okText={initialValues ? 'Сохранить' : 'Добавить'}
       cancelText="Отмена"
       onCancel={onCancel}
+        // Сохранение
       onOk={() => {
         form.validateFields().then((values) => {
           const formattedDate =
             values.date && typeof values.date !== 'string'
-              ? values.date.format('YYYY-MM-DD')
+              ? values.date.format(DATE_FORMAT)
               : values.date
 
           const task: Task = {

@@ -6,8 +6,11 @@ import SearchBar from './features/search/components/SearchBar.tsx'
 import { useSearchableTasks } from './features/search/hooks/useSearchableTasks.ts'
 
 function App() {
+    // Хук для работы с данными таблицы (чтение, добавление, обновление, удаление задач)
   const { tasks, addTask, removeTask, updateTask } = useTableData()
+    // Хук для управления состоянием модального окна (открыть/закрыть + редактируемая задача)
   const { isOpen, editingTask, openModal, closeModal } = useModalForm()
+    // Хук для поиска по задачам (отслеживает введённый текст и фильтрует задачи)
   const { filteredTasks, inputValue, handleChange } = useSearchableTasks(tasks)
 
   return (
@@ -22,11 +25,11 @@ function App() {
       <TasksTable data={filteredTasks} onDelete={removeTask} onEdit={openModal} />
 
       <ModalForm
-        open={isOpen}
-        initialValues={editingTask}
-        onCancel={closeModal}
-        onSubmit={(task) => {
-          editingTask ? updateTask(task) : addTask(task)
+        open={isOpen}  // управляет видимостью модалки
+        initialValues={editingTask}  // если передано — редактирование, иначе добавление
+        onCancel={closeModal}  // закрытие модалки
+        onSubmit={(task) => {  // при сохранении
+          editingTask ? updateTask(task) : addTask(task)  // если редактировали → обновляем, иначе добавляем
         }}
       />
     </div>
