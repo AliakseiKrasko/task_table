@@ -16,8 +16,8 @@ export const storage = {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
     },
 
-    removeTask(task: Task): void {
-        const tasks = storage.getAllTasks().filter(t => t.id !== task.id)
+    removeTask(id: number): void {
+        const tasks = storage.getAllTasks().filter(t => t.id !== id)
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
     }
 }
