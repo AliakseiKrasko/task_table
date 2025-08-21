@@ -24,6 +24,5 @@ export function useTableData() {
     setTasks(storage.getAllTasks())
   }
 
-
   return { tasks, setTasks, addTask, removeTask, updateTask }
 }

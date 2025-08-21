@@ -1,9 +1,10 @@
-import type {Task} from '../../../types/table.ts'
-import {Table} from 'antd'
-import {Button} from "../../../shared/ui/Button.tsx";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import dayjs from "dayjs";
-import type {ColumnsType} from "antd/es/table";
+import type { Task } from '../../../types/table.ts'
+import { Table } from 'antd'
+import { Button } from '../../../shared/ui/Button.tsx'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import dayjs from 'dayjs'
+import type { ColumnsType } from 'antd/es/table'
+import { DATE_FORMAT } from '../../../shared/constants/date.ts'
 
 type Props = {
   data: Task[]
@@ -23,9 +24,8 @@ export default function TasksTable({ data, onDelete, onEdit }: Props) {
       title: 'Дата',
       dataIndex: 'date',
       key: 'date',
-      sorter: (a, b) =>
-          dayjs(a.date).unix() - dayjs(b.date).unix(),
-      render: (date: string) => dayjs(date).format("DD.MM.YYYY"),
+      sorter: (a, b) => dayjs(a.date).unix() - dayjs(b.date).unix(),
+      render: (date: string) => dayjs(date).format(DATE_FORMAT),
     },
     {
       title: 'Значение',
@@ -37,10 +37,10 @@ export default function TasksTable({ data, onDelete, onEdit }: Props) {
       title: 'Действия',
       key: 'actions',
       render: (_: unknown, record: Task) => (
-          <div className="flex gap-2">
-              <Button icon={<EditOutlined />} onClick={() => onEdit(record)} />
-              <Button danger icon={<DeleteOutlined />} onClick={() => onDelete(record.id)} />
-          </div>
+        <div className="flex gap-2">
+          <Button icon={<EditOutlined />} onClick={() => onEdit(record)} />
+          <Button danger icon={<DeleteOutlined />} onClick={() => onDelete(record.id)} />
+        </div>
       ),
     },
   ]

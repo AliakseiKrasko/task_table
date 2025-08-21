@@ -1,7 +1,8 @@
 import { Form, Input, DatePicker, InputNumber, Modal } from 'antd'
 import type { Task } from '../../../types/table'
 import { useEffect } from 'react'
-import dayjs from "dayjs";
+import dayjs from 'dayjs'
+import { DATE_FORMAT } from '../../../shared/constants/date.ts'
 
 type Props = {
   open: boolean
@@ -34,38 +35,48 @@ export default function ModalForm({ open, onCancel, onSubmit, initialValues }: P
       onOk={() => {
         form.validateFields().then((values) => {
           const formattedDate =
-              values.date && typeof values.date !== "string"
-                  ? values.date.format("YYYY-MM-DD")
-                  : values.date;
+            values.date && typeof values.date !== 'string'
+              ? values.date.format('YYYY-MM-DD')
+              : values.date
 
           const task: Task = {
             id: initialValues?.id ?? Date.now(),
             name: values.name,
             date: formattedDate,
             value: values.value,
-          };
+          }
 
-          onSubmit(task);
+          onSubmit(task)
           form.resetFields()
-          onCancel();
-        });
+          onCancel()
+        })
       }}
     >
       <Form form={form} layout="vertical">
-        <Form.Item name="name" label="Имя" rules={[{ required: true, message: 'Введите имя' }]}>
-          <Input />
+        <Form.Item
+          name="name"
+          label="Имя"
+          rules={[
+            { required: true, message: 'Введите имя' },
+            { min: 2, message: 'Имя должно содержать минимум 2 символа' },
+          ]}
+        >
+          <Input placeholder="Введите имя" />
         </Form.Item>
 
         <Form.Item name="date" label="Дата" rules={[{ required: true, message: 'Выберите дату' }]}>
-          <DatePicker />
+          <DatePicker format={DATE_FORMAT} />
         </Form.Item>
 
         <Form.Item
           name="value"
           label="Значение"
-          rules={[{ required: true, message: 'Введите число' }]}
+          rules={[
+            { required: true, message: 'Введите число' },
+            { type: 'number', min: 1, message: 'Значение должно быть больше 0' },
+          ]}
         >
-          <InputNumber className="w-full" />
+          <InputNumber className="w-full" placeholder="Введите число" />
         </Form.Item>
       </Form>
     </Modal>

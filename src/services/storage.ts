@@ -21,10 +21,10 @@ export const storage = {
 
   updateTask(updatedTask: Task) {
     const tasks = storage.getAllTasks()
-    const index = tasks.findIndex(t => t.id === updatedTask.id)
+    const index = tasks.findIndex((t) => t.id === updatedTask.id)
     if (index !== -1) {
       tasks[index] = updatedTask
       localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
     }
-  }
+  },
 }
