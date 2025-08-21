@@ -1,54 +1,41 @@
-import { TasksTable, useTableData } from './features/table'
-import { Button } from './shared/ui/Button.tsx'
-import {useState} from "react";
-import type {Task} from "./types/table.ts";
+import {TasksTable, useTableData} from './features/table'
+import {Button} from './shared/ui/Button.tsx'
 import ModalForm from "./features/modal/components/ModalForm.tsx";
+import {useModalForm} from "./features/modal/hooks/useModalForm.ts";
+import SearchBar from "./features/search/components/SearchBar.tsx";
+import {useSearchableTasks} from "./features/search/hooks/useSearchableTasks.ts";
 
 function App() {
-  const { tasks, addTask, removeTask, updateTask } = useTableData()
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [editingTask, setEditingTask] = useState<Task | null>(null);
-
-    const handleAdd = (task: Task) => {
-        addTask(task);
-    };
-
-    const handleEdit = (task: Task) => {
-        updateTask(task);
-    };
+    const { tasks, addTask, removeTask, updateTask } = useTableData();
+    const { isOpen, editingTask, openModal, closeModal, setEditingTask } = useModalForm();
+    const { filteredTasks, inputValue, handleChange } = useSearchableTasks(tasks)
 
 
     return (
         <div className="p-6">
-            <div className="mb-4">
-                <Button type="primary" onClick={() => setModalOpen(true)}>
+            <div className="mb-4 flex gap-4">
+                <Button type="primary" onClick={() => openModal()}>
                     Добавить
                 </Button>
+                <SearchBar value={inputValue} onChange={handleChange} />
             </div>
 
             <TasksTable
-                data={tasks}
+                data={filteredTasks}
                 onDelete={removeTask}
                 onEdit={(task) => {
                     setEditingTask(task);
-                    setModalOpen(true);
+                    openModal();
                 }}
             />
 
             <ModalForm
-                open={isModalOpen}
-                onCancel={() => {
-                    setModalOpen(false);
-                    setEditingTask(null);
-                }}
-                onSubmit={(task) => {
-                    if (editingTask) {
-                        handleEdit(task);
-                    } else {
-                        handleAdd(task);
-                    }
-                }}
+                open={isOpen}
                 initialValues={editingTask}
+                onCancel={closeModal}
+                onSubmit={(task) => {
+                    editingTask ? updateTask(task) : addTask(task);
+                }}
             />
         </div>
     );
