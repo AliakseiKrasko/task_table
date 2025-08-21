@@ -3,6 +3,7 @@ import {Table} from 'antd'
 import {Button} from "../../../shared/ui/Button.tsx";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
+import type {ColumnsType} from "antd/es/table";
 
 type Props = {
   data: Task[]
@@ -11,22 +12,26 @@ type Props = {
 }
 
 export default function TasksTable({ data, onDelete, onEdit }: Props) {
-  const columns = [
+  const columns: ColumnsType<Task> = [
     {
       title: 'Имя',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: 'Дата',
       dataIndex: 'date',
       key: 'date',
+      sorter: (a, b) =>
+          dayjs(a.date).unix() - dayjs(b.date).unix(),
       render: (date: string) => dayjs(date).format("DD.MM.YYYY"),
     },
     {
       title: 'Значение',
       dataIndex: 'value',
       key: 'value',
+      sorter: (a, b) => a.value - b.value,
     },
     {
       title: 'Действия',
